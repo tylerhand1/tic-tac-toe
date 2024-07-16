@@ -2,7 +2,7 @@ import { socket } from '@/socket';
 import { useState } from 'react';
 
 const InviteFriend = () => {
-  const [inviteCode, setInviteCode] = useState<number>(0);
+  const [inviteCode, setInviteCode] = useState<number | undefined>(undefined);
 
   socket.on('create-success', (inviteCode: number | undefined) => {
     if (inviteCode !== undefined) {
@@ -11,7 +11,9 @@ const InviteFriend = () => {
   })
 
   const handleClick = () => {
-    navigator.clipboard.writeText(inviteCode.toString());
+    if (inviteCode !== undefined) {
+      navigator.clipboard.writeText(inviteCode.toString());
+    }
   };
 
   return (
