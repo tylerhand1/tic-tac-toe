@@ -2,8 +2,9 @@ import express, { Express, Request, Response } from 'express';
 import { Server } from 'socket.io';
 import { createServer } from 'node:http';
 import cors from 'cors';
+import config from './utils/config';
 
-const allowedOrigins = ['http://localhost:4000'];
+const allowedOrigins = 'http://localhost:3000';
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
 };
@@ -24,7 +25,7 @@ const io = new Server(server, {
   }
 });
 
-io.listen(4000);
+io.listen(config.CORS_PORT);
 
 io.on('connection', _socket => {
   
