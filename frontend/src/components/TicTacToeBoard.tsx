@@ -1,15 +1,5 @@
 import { useState } from 'react';
-
-interface SquareProps {
-  value?: string,
-  handleClick?: () => void
-}
-
-interface TicTacToeBoardProps {
-  player: number,
-  setPlayer: (value: number | ((prevVar: number) => number)) => void,
-  getPlayerName: () => string
-}
+import { SquareProps, TicTacToeBoardProps } from '@/types';
 
 const Square = ({ value, handleClick } : SquareProps) => {
   return (

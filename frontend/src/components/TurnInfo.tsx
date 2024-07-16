@@ -1,10 +1,8 @@
-interface TurnInfoProps {
-  getPlayerName: () => string
-}
+import { TurnInfoProps } from '@/types';
 
 const TurnInfo = ({ getPlayerName } : TurnInfoProps) => (
   <>
-    <h2>{getPlayerName()}`&apos;s turn</h2>
+    <h2>{getPlayerName()}&apos;s turn</h2>
   </>
 );
 
