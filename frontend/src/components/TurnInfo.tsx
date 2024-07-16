@@ -1,15 +1,11 @@
 interface TurnInfoProps {
-  player: number,
   getPlayerName: () => string
 }
 
-
-const TurnInfo = ({ player, getPlayerName} : TurnInfoProps) => {
-  return (
-    <>
-      <h2>{getPlayerName()}'s turn</h2>
-    </>
-  );
-};
+const TurnInfo = ({ getPlayerName } : TurnInfoProps) => (
+  <>
+    <h2>{getPlayerName()}`&apos;s turn</h2>
+  </>
+);
 
 export default TurnInfo;
