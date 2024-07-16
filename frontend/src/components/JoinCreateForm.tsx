@@ -1,6 +1,6 @@
 import { MouseEvent, useState } from 'react';
 import { socket } from '@/socket';
-import { requestRoom } from '@/services/tictactoeRoom';
+import { createRoom } from '@/services/tictactoeRoom';
 
 const JoinCreateForm = () => {
   const [lobby, setLobby] = useState<string>('');
@@ -19,8 +19,11 @@ const JoinCreateForm = () => {
   const createLobby = async (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     socket.connect();
-    const roomNumber: string | undefined = await requestRoom();
-    console.log(roomNumber);
+    const returnedData = await createRoom();
+    const roomNumber: number = returnedData.room;
+    if (roomNumber !== -1) {
+      socket.emit('join', roomNumber)
+    }
   };
 
   return (

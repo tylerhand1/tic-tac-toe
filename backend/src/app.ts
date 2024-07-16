@@ -44,8 +44,9 @@ const generateRoomNumber = (): number => {
 };
 
 io.on('connection', socket => {
-  socket.on('create', room => {
+  socket.on('join', room => {
     socket.join(room)
+    console.log('joined room', room)
   });
 });
 
@@ -53,14 +54,14 @@ app.get('/ping', (_req: Request, res: Response) => {
   res.send('pong');
 });
 
-app.post('/api/tictactoeroom', (_req: Request, res: Response) => {
+app.post('/api/create-room', (_req: Request, res: Response) => {
   const roomNumber = generateRoomNumber()
   const newRoom = {
     number: roomNumber,
     count: 0,
   }
   rooms.push(newRoom);
-  console.log(rooms)
+
   res.status(200).send({
     'room': newRoom.number,
   });
