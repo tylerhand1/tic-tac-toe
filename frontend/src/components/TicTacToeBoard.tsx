@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SquareProps, TicTacToeBoardProps } from '@/types';
+import { getPlayerName } from '@/utils/playerInfo';
 
 const Square = ({ value, handleClick } : SquareProps) => {
   return (
@@ -9,12 +10,12 @@ const Square = ({ value, handleClick } : SquareProps) => {
   );
 };
 
-const TicTacToeBoard = ({ player, setPlayer, getPlayerName } : TicTacToeBoardProps) => {
+const TicTacToeBoard = ({ player, setPlayer } : TicTacToeBoardProps) => {
   const [squares, setSquares] = useState<(string | undefined) []>(Array(9).fill(undefined));
 
   const handleClick = (index: number) => {
     if (squares[index] === undefined) {
-      const square = getPlayerName();
+      const square = getPlayerName(player);
       const updatedSquares = [...squares];
       updatedSquares[index] = square;
       setSquares(updatedSquares);

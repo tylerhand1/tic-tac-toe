@@ -13,7 +13,7 @@ describe('Header tests', () => {
   it('should render a header tag', () => {
     const header = container.querySelector('header');
     expect(header).toBeDefined();
-  })
+  });
 
   it('should render the header with the text \'Tic Tac Toe\'', () => {
     expect(
