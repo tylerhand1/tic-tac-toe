@@ -1,26 +1,39 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { socket } from '@/socket';
+import { requestRoom } from '@/services/tictactoeRoom';
 
 const JoinCreateForm = () => {
+  const [lobby, setLobby] = useState<string>('');
+
   const joinLobby = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    socket.connect();
-    console.log('Join lobby');
+    if (lobby !== '') {
+      socket.connect();
+      console.log('Join lobby');
+      setLobby('');
+    } else {
+      console.log('You need a code before entering')
+    }
   };
 
-  const createLobby = (e: MouseEvent<HTMLElement>) => {
+  const createLobby = async (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
     socket.connect();
-    console.log('Create lobby');
+    const roomNumber: string | undefined = await requestRoom();
+    console.log(roomNumber);
   };
 
   return (
     <form className='lobby-form'>
       <input
-        type='text'
+        type='tel'
         name='lobby-code'
         id='lobby-code'
         placeholder='Code'
+        value={lobby}
+        onChange={e => {
+          setLobby(e.target.value);
+        }}
       />
       <button type='submit' onClick={e => {
         joinLobby(e);
