@@ -1,4 +1,4 @@
-import TicTacToeBoard from '@/components/TicTacToeBoard';
+import { TicTacToeBoard } from '@/components/TicTacToeBoard';
 import TurnInfo from '@/components/TurnInfo';
 import { useState } from 'react';
 
