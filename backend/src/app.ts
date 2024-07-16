@@ -46,13 +46,19 @@ const generateRoomNumber = (): number => {
 io.on('connection', socket => {
   socket.on('create-room', room => {
     socket.join(room);
-    socket.emit('create-success', room)
+    socket.emit('create-success', room);
   });
 
   socket.on('join-room', room => {
     if (io.sockets.adapter.rooms.get(room)) {
-      socket.join(room)
+      if (io.sockets.adapter.rooms.get(room)!.size < 2) {
+        socket.join(room);
+        socket.emit('join-success');
+        return;
+      }
     }
+    socket.emit('join-fail');
+    console.log(io.sockets.adapter.rooms.get(room))
   });
 });
 
