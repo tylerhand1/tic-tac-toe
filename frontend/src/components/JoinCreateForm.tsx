@@ -1,19 +1,17 @@
 import { MouseEvent, useState } from 'react';
 import { socket } from '@/socket';
 import { createRoom } from '@/services/tictactoeRoom';
+import ErrorMessage from './ErrorMessage';
 
 const JoinCreateForm = () => {
   const [lobby, setLobby] = useState<string>('');
+  const [joinFail, setJoinFail] = useState<boolean>(false);
 
   const joinLobby = (e: MouseEvent<HTMLElement>) => {
     e.preventDefault();
-    if (lobby !== '') {
-      socket.connect();
-      const roomNumber: number = Number.parseInt(lobby);
-      socket.emit('join-room', roomNumber)
-    } else {
-      console.log('You need a code before entering')
-    }
+    socket.connect();
+    const roomNumber: number = Number.parseInt(lobby);
+    socket.emit('join-room', roomNumber)
     setLobby('');
   };
 
@@ -27,14 +25,25 @@ const JoinCreateForm = () => {
     }
   };
 
+  socket.on('join-fail', () => {
+    socket.disconnect();
+    setJoinFail(true);
+    setTimeout(() => {
+      setJoinFail(false);
+    }, 2 * 1000);
+  });
+
   return (
     <form className='lobby-form'>
+      <ErrorMessage error={joinFail} message={'Invalid Code'} />
       <input
         type='tel'
         name='lobby-code'
         id='lobby-code'
+        maxLength={5}
         placeholder='Code'
         value={lobby}
+        autoFocus
         onChange={e => {
           setLobby(e.target.value);
         }}
