@@ -72,6 +72,14 @@ main {
 }
 
 /* Lobby join/create form */
+.error {
+  color: red;
+}
+
+.no-error {
+  display: none
+}
+
 form {
   flex: 1;
   display: flex;
@@ -100,7 +108,6 @@ button.create-lobby-btn {
 }
 
 /* Game */
-
 .board {
   height: 250px;
   width: 250px;
