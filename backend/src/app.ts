@@ -23,8 +23,30 @@ const io = new Server(server, {
   }
 });
 
-io.on('connection', _socket => {
+interface room {
+  number: number,
+  count: number,
+}
 
+const rooms: room [] = [];
+
+const generateRoomNumber = (): number => {
+  if (rooms.length < 90000) {
+    let roomNumber: number;
+    while (true) {
+      roomNumber = Math.floor(10000 + Math.random() * 90000);
+      const roomsWithSameNumber = rooms.filter(room => room.number === roomNumber);
+      if (roomsWithSameNumber.length === 0) break;
+    }
+    return roomNumber;
+  }
+  return -1;
+};
+
+io.on('connection', socket => {
+  socket.on('create', room => {
+    socket.join(room)
+  });
 });
 
 app.get('/ping', (_req: Request, res: Response) => {
@@ -32,8 +54,15 @@ app.get('/ping', (_req: Request, res: Response) => {
 });
 
 app.post('/api/tictactoeroom', (_req: Request, res: Response) => {
+  const roomNumber = generateRoomNumber()
+  const newRoom = {
+    number: roomNumber,
+    count: 0,
+  }
+  rooms.push(newRoom);
+  console.log(rooms)
   res.status(200).send({
-    "create": "success"
+    'room': newRoom.number,
   });
 });
 
