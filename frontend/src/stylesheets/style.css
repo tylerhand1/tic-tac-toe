@@ -8,6 +8,14 @@
   color: #1e272e;
 }
 
+*:focus {
+  outline: none;
+}
+
+:root {
+  --header-height: 88px;
+}
+
 html,
 body {
   height: 100%;
@@ -33,14 +41,59 @@ h2 {
   font-size: 2.8rem;
 }
 
+p {
+  font-size: 1.6rem;
+}
+
+button,
+input {
+  border: none;
+}
+
+input {
+  width: 150px;
+  font-size: 2.2rem;
+  text-align: center;
+}
+
+button[type=submit] {
+  display: none;
+}
+
 main {
-  margin-top: 24px;
+  height: calc(100vh - var(--header-height) - 24px);
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 36px;
 }
 
+/* Lobby join/create form */
+form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+form p {
+  padding: 36px 0;
+}
+
+form input,
+form button.create-lobby-btn {
+  width: 180px;
+}
+
+button.create-lobby-btn {
+  background-color: #74b9ff;
+  padding: 12px;
+  font-size: 1.4rem;
+}
+
+/* Game */
 .board {
   height: 250px;
   width: 250px;
