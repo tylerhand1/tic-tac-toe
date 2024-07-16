@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SquareProps, TicTacToeBoardProps } from '@/types';
 import { getPlayerName } from '@/utils/playerInfo';
 
-const Square = ({ value, handleClick } : SquareProps) => {
+export const Square = ({ value, handleClick } : SquareProps) => {
   return (
     <button className='board-square' onClick={handleClick}>
       {value}
@@ -10,7 +10,7 @@ const Square = ({ value, handleClick } : SquareProps) => {
   );
 };
 
-const TicTacToeBoard = ({ player, setPlayer } : TicTacToeBoardProps) => {
+export const TicTacToeBoard = ({ player, setPlayer } : TicTacToeBoardProps) => {
   const [squares, setSquares] = useState<(string | undefined) []>(Array(9).fill(undefined));
 
   const handleClick = (index: number) => {
@@ -65,5 +65,3 @@ const TicTacToeBoard = ({ player, setPlayer } : TicTacToeBoardProps) => {
     </div>
   );
 };
-
-export default TicTacToeBoard;
