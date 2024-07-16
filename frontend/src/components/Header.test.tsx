@@ -1,18 +1,23 @@
 import { render } from '@testing-library/react';
-import App from '@/App';
+import Header from '@/components/Header';
 
-describe('App tests', () => {
+describe('Header tests', () => {
   let container: HTMLElement;
 
   beforeEach(() => {
     container = render(
-      <App />
+      <Header />
     ).container;
   });
 
+  it('should render a header tag', () => {
+    const header = container.querySelector('header');
+    expect(header).toBeVisible();
+  })
+
   it('should render the header with the text \'Tic Tac Toe\'', () => {
     expect(
-      container.querySelector('h1')
+      container.querySelector('header h1')
     ).toHaveTextContent('Tic Tac Toe');
   });
 });
