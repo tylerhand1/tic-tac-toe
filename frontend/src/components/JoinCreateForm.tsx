@@ -9,11 +9,12 @@ const JoinCreateForm = () => {
     e.preventDefault();
     if (lobby !== '') {
       socket.connect();
-      console.log('Join lobby');
-      setLobby('');
+      const roomNumber: number = Number.parseInt(lobby);
+      socket.emit('join-room', roomNumber)
     } else {
       console.log('You need a code before entering')
     }
+    setLobby('');
   };
 
   const createLobby = async (e: MouseEvent<HTMLElement>) => {
@@ -22,7 +23,7 @@ const JoinCreateForm = () => {
     const returnedData = await createRoom();
     const roomNumber: number = returnedData.room;
     if (roomNumber !== -1) {
-      socket.emit('join', roomNumber)
+      socket.emit('create-room', roomNumber)
     }
   };
 

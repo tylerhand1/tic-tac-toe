@@ -1,5 +1,6 @@
 import { TicTacToeBoard } from '@/components/TicTacToeBoard';
 import TurnInfo from '@/components/TurnInfo';
+import InviteFriend from '@/components/InviteFriend';
 import { useState } from 'react';
 
 const Game = () => {
@@ -14,6 +15,7 @@ const Game = () => {
         player={player}
         setPlayer={setPlayer}
       />
+      <InviteFriend />
     </>
   );
 };
