@@ -35,7 +35,7 @@ interface room {
   sock_ids: string []
 }
 
-const rooms: room [] = [];
+let rooms: room [] = [];
 
 const generateRoomNumber = (): number => {
   if (rooms.length < 90000) {
@@ -124,17 +124,23 @@ io.on('connection', socket => {
   });
 
   socket.on('disconnect', () => {
-    const room = findRoomBySocket(socket.id);
-    if (room !== undefined) {
-      removeSocketFromRoom(room.number, socket.id);
-      room.canPlay = false;
-      room.currPlayer = Player.X;
+    const foundRoom = findRoomBySocket(socket.id);
+    if (foundRoom !== undefined) {
+      removeSocketFromRoom(foundRoom.number, socket.id);
 
-      const otherSocketName = room.sock_ids[0];
+      if (foundRoom.sock_ids.length === 0) {
+        // Remove the room from the rooms ds if no more sockets in sock_ids
+        rooms = rooms.filter(room => room.number !== foundRoom.number);
+      }
+
+      foundRoom.canPlay = false;
+      foundRoom.currPlayer = Player.X;
+
+      const otherSocketName = foundRoom.sock_ids[0];
       const otherSocket = io.sockets.sockets.get(otherSocketName);
 
       if (otherSocket !== undefined) {
-        otherSocket?.emit('player-leave', room.number);
+        otherSocket?.emit('player-leave', foundRoom.number);
       }
     }
   });
