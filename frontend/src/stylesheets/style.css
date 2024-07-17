@@ -164,7 +164,8 @@ button.create-lobby-btn {
   bottom: 50px;
 }
 
-.invite-code-btn {
+.invite-code-btn,
+.new-game-btn {
   padding: 12px;
 }
 

@@ -1,17 +1,19 @@
 import { TicTacToeBoard } from '@/components/TicTacToeBoard';
 import TurnInfo from '@/components/ui/TurnInfo';
-import InviteFriend from '@/components/InviteFriend';
+import InviteFriend from '@/components/ui/InviteFriend';
 import { useEffect, useState } from 'react';
 import { socket } from '@/socket';
 import WinnerMessage from './ui/WinnerMessage';
 
-const Game = () => {
+import { GameProps } from '@/types';
+import StartNewGame from './ui/StartNewGame';
+
+const Game = ({inviteCode, setInviteCode}: GameProps) => {
   const [player, setPlayer] = useState(0);
   const [playerTurn, setPlayerTurn] = useState(player);
   const [gameOver, setGameOver] = useState(false);
   const [isTie, setIsTie] = useState(false);
   const [inviteFriend, setInviteFriend] = useState(true);
-  const [inviteCode, setInviteCode] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     const onPlayerJoin = () => {
@@ -70,6 +72,11 @@ const Game = () => {
       <div className='invite-container'>
         <InviteFriend inviteCode={inviteCode} setInviteCode={setInviteCode} />
       </div>
+      }
+      {gameOver &&
+        <div className='invite-container'>
+          <StartNewGame />
+        </div>
       }
     </>
   );

@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react';
 const App = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
   const [joinFail, setJoinFail] = useState(false);
+  const [inviteCode, setInviteCode] = useState<number>(0);
 
   useEffect(() => {
     const onDisconnect = () => {
@@ -44,12 +45,16 @@ const App = () => {
       <main>
         {(!isConnected) &&
           <JoinCreateForm
+            setInviteCode={setInviteCode}
             setIsConnected={setIsConnected}
             joinFail={joinFail}
           />
         }
         {(isConnected) && !joinFail &&
-          <Game />
+          <Game
+            inviteCode={inviteCode}
+            setInviteCode={setInviteCode}
+          />
         }
       </main>
     </>

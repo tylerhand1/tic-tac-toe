@@ -4,11 +4,12 @@ import { createRoom } from '@/services/tictactoeRoom';
 import ErrorMessage from './ui/ErrorMessage';
 
 interface JoinCreateFormProps {
+  setInviteCode: (value: number | ((prevVal: number) => number)) => void,
   setIsConnected: (value: boolean | ((prevVal: boolean) => boolean)) => void,
   joinFail: boolean
 }
 
-const JoinCreateForm = ({ setIsConnected, joinFail }: JoinCreateFormProps) => {
+const JoinCreateForm = ({ setInviteCode, setIsConnected, joinFail }: JoinCreateFormProps) => {
   const [lobby, setLobby] = useState<string>('');
 
   const joinLobby = (e: MouseEvent<HTMLElement>): void => {
@@ -16,6 +17,7 @@ const JoinCreateForm = ({ setIsConnected, joinFail }: JoinCreateFormProps) => {
     socket.connect();
     const roomNumber: number = Number.parseInt(lobby);
     socket.emit('join-room', roomNumber);
+    setInviteCode(roomNumber);
     setLobby('');
   };
 
