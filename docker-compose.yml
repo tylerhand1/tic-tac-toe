@@ -9,25 +9,9 @@ services:
       - type: bind
         source: ./backend/src
         target: /app/src
-    command: npm run dev
     healthcheck:
       test: curl -s http://localhost:3000
       interval: 5s
       timeout: 3s
       retries: 3
       start_period: 1s
-  frontend:
-    depends_on:
-      backend:
-        condition: service_healthy
-    build: ./frontend/
-    ports:
-      - "4000:4000"
-    volumes:
-      - type: bind
-        source: ./frontend/src
-        target: /app/src
-      - type: bind
-        source: ./frontend/public
-        target: /app/public
-    command: npm run dev
