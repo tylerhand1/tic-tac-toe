@@ -78,6 +78,8 @@ main {
 /* Lobby join/create form */
 .error {
   color: red;
+  position: absolute;
+  top: 200px;
 }
 
 .no-error {
