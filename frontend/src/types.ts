@@ -5,10 +5,28 @@ export interface SquareProps {
 
 export interface TicTacToeBoardProps {
   player: number,
-  setPlayer: (value: number | ((prevVar: number) => number)) => void,
-  getPlayerName: () => string
+  playerTurn: number,
+  setPlayerTurn: (value: number | ((prevVar: number) => number)) => void,
+  gameOver: boolean,
+  setGameOver: (value: boolean | ((prevVar: boolean) => boolean)) => void,
+  setIsTie: (value: boolean | ((prevVar: boolean) => boolean)) => void,
 }
 
 export interface TurnInfoProps {
-  getPlayerName: () => string
+  playerTurn: number,
+  player: number,
+}
+
+export interface CreateRoomResponse {
+  room: number
+}
+
+export interface InviteFriendProps {
+  inviteCode?: number,
+  setInviteCode: (inviteCode?: number | ((prevVar?: number) => number)) => void
+}
+
+export interface ErrorMessageProps {
+  error: boolean,
+  message: string
 }

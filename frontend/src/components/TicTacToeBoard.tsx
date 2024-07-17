@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SquareProps, TicTacToeBoardProps } from '@/types';
+import { getPlayerName } from '@/utils/playerInfo';
+import { socket } from '@/socket';
 
-const Square = ({ value, handleClick } : SquareProps) => {
+export const Square = ({ value, handleClick } : SquareProps) => {
   return (
     <button className='board-square' onClick={handleClick}>
       {value}
@@ -9,21 +11,100 @@ const Square = ({ value, handleClick } : SquareProps) => {
   );
 };
 
-const TicTacToeBoard = ({ player, setPlayer, getPlayerName } : TicTacToeBoardProps) => {
-  const [squares, setSquares] = useState<(string | undefined) []>(Array(9).fill(undefined));
+export const TicTacToeBoard = ({
+  player,
+  playerTurn,
+  setPlayerTurn,
+  gameOver,
+  setGameOver,
+  setIsTie
+} : TicTacToeBoardProps) => {
+  const [squares, setSquares] = useState<(string) []>(Array(9).fill(''));
 
-  const handleClick = (index: number) => {
-    if (squares[index] === undefined) {
-      const square = getPlayerName();
+  useEffect(() => {
+    const resetGame = (): void => {
+      setSquares(Array(9).fill(''));
+    };
+
+    const updateSquares = (index: number, player: number): void => {
+      const square = getPlayerName(player);
       const updatedSquares = [...squares];
       updatedSquares[index] = square;
       setSquares(updatedSquares);
-      togglePlayer();
-    }
-  };
+      checkWin(updatedSquares);
+    };
 
-  const togglePlayer = () => {
-    setPlayer(1 - player);
+    const checkWin = (updatedSquares: string []): void => {
+      if (gameOver) {
+        return;
+      }
+      let updatedGameOver = false;
+      // Check each row
+      for (let i = 0; i < 9; i += 3) {
+        if (updatedSquares[i] === '') {
+          continue;
+        }
+        if (updatedSquares[i] === updatedSquares[i + 1] && updatedSquares[i + 1] === updatedSquares[i + 2]) {
+          updatedGameOver = true;
+        }
+      }
+      // Check each column
+      for (let i = 0; i < 3; i++) {
+        if (updatedSquares[i] === '') {
+          continue;
+        }
+        if (updatedSquares[i] === updatedSquares[i + 3] && updatedSquares[i + 3] === updatedSquares[i + 6]) {
+          updatedGameOver = true;
+        }
+      }
+      // Check diagonals
+      if (updatedSquares[0] === '') {
+        return;
+      }
+      if (updatedSquares[0] === updatedSquares[4] && updatedSquares[4] === updatedSquares[8]) {
+        updatedGameOver = true;
+      }
+      if (updatedSquares[2] === '') {
+        return;
+      }
+      if (updatedSquares[2] === updatedSquares[4] && updatedSquares[4] === updatedSquares[6]) {
+        updatedGameOver = true;
+      }
+      if (updatedGameOver) {
+        const winner = playerTurn;
+        setPlayerTurn(winner);
+      } else {
+        const foundEmpty = updatedSquares.filter(square => square.length === 0);
+        if (foundEmpty.length === 0) {
+          updatedGameOver = true;
+          setIsTie(true);
+        }
+      }
+      setGameOver(updatedGameOver);
+    };
+
+    socket.on('player-leave', () => {
+      resetGame();
+    });
+
+    socket.on('move-success', (index: number, player: number) => {
+      updateSquares(index, player);
+      const newPlayerTurn = 1 - playerTurn;
+      setPlayerTurn(newPlayerTurn);
+    });
+
+    return () => {
+      socket.off('player-leave');
+      socket.off('move-success');
+    };
+  }, [squares, playerTurn, setPlayerTurn, gameOver, setGameOver, setIsTie]);
+
+  const handleClick = (index: number) => {
+    if (!gameOver) {
+      if (squares[index] === '' && player === playerTurn) {
+        socket.emit('make-move', index, player);
+      }
+    }
   };
 
   return (
@@ -64,5 +145,3 @@ const TicTacToeBoard = ({ player, setPlayer, getPlayerName } : TicTacToeBoardPro
     </div>
   );
 };
-
-export default TicTacToeBoard;

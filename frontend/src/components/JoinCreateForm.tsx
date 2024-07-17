@@ -1,33 +1,59 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { socket } from '@/socket';
+import { createRoom } from '@/services/tictactoeRoom';
+import ErrorMessage from './ErrorMessage';
 
 const JoinCreateForm = () => {
-  const joinLobby = (e: MouseEvent<HTMLElement>) => {
+  const [lobby, setLobby] = useState<string>('');
+  const [joinFail, setJoinFail] = useState<boolean>(false);
+
+  const joinLobby = (e: MouseEvent<HTMLElement>): void => {
     e.preventDefault();
     socket.connect();
-    console.log('Join lobby');
+    const roomNumber: number = Number.parseInt(lobby);
+    socket.emit('join-room', roomNumber);
+    setLobby('');
   };
 
-  const createLobby = (e: MouseEvent<HTMLElement>) => {
+  const createLobby = async (e: MouseEvent<HTMLElement>): Promise<void> => {
     e.preventDefault();
     socket.connect();
-    console.log('Create lobby');
+    const returnedData: { room: number } = await createRoom();
+    const roomNumber: number = returnedData.room;
+    if (roomNumber !== -1) {
+      socket.emit('create-room', roomNumber);
+    }
   };
+
+  socket.on('join-fail', () => {
+    socket.disconnect();
+    setJoinFail(true);
+    setTimeout(() => {
+      setJoinFail(false);
+    }, 2 * 1000);
+  });
 
   return (
     <form className='lobby-form'>
+      <ErrorMessage error={joinFail} message={'Invalid Code'} />
       <input
-        type='text'
+        type='tel'
         name='lobby-code'
         id='lobby-code'
+        maxLength={5}
         placeholder='Code'
+        value={lobby}
+        autoFocus
+        onChange={e => {
+          setLobby(e.target.value);
+        }}
       />
       <button type='submit' onClick={e => {
         joinLobby(e);
       }}/>
       <p>or</p>
-      <button className='create-lobby-btn' onClick={e => {
-        createLobby(e);
+      <button className='create-lobby-btn' onClick={(e) => {
+        void createLobby(e);
       }}>
         Create a lobby
       </button>
