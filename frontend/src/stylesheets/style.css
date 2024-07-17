@@ -5,7 +5,6 @@
   text-decoration: none;
 
   font-family: Lato, sans-serif;
-  color: #1e272e;
 }
 
 *:focus {
@@ -14,6 +13,19 @@
 
 :root {
   --header-height: 88px;
+
+  --board-size: 250px;
+
+  --bg-color: #1f2933;
+  --text-color: #ecf0f1;
+
+  --header-border-color: #2ecc71;
+
+  --board-square-border-color: #2ecc71;
+  --board-bg-color: #ecf0f1;
+  --board-square-color: #e74c3c;
+
+  --button-bg-color: #2980b9;
 }
 
 html,
@@ -23,13 +35,14 @@ body {
 
 body {
   font-size: 62.5%;
-  background-color: #f5f6fa;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 }
 
 header {
   display: flex;
   justify-content: center;
-  border-bottom: 2px solid #353b48;
+  border-bottom: 2px solid var(--header-border-color);
   padding: 12px 0;
 }
 
@@ -105,9 +118,14 @@ form button.create-lobby-btn {
 }
 
 button {
-  background-color: #74b9ff;
+  background-color: var(--button-bg-color);
+  color: #fff;
   font-size: 1.4rem;
   padding: 12px 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 button.create-lobby-btn {
@@ -120,8 +138,8 @@ button.create-lobby-btn {
 }
 
 .board {
-  height: 250px;
-  width: 250px;
+  height: var(--board-size);
+  width: var(--board-size);
 }
 
 .board-row {
@@ -129,15 +147,16 @@ button.create-lobby-btn {
 }
 
 .board-square {
-  margin-right: -1px;
-  margin-top: -1px;
-  height: calc(250px / 3);
-  width: calc(250px / 3);
+  margin-right: -2px;
+  margin-top: -2px;
+  height: calc(var(--board-size) / 3);
+  width: calc(var(--board-size) / 3);
 
-  border: 1px solid #111;
-  background-color: #ecf0f1;
+  border: 2px solid var(--board-square-border-color);
+  background-color: var(--board-bg-color);
+  color: var(--board-square-color);
 
-  font-size: 2.4rem;
+  font-size: 4rem;
 }
 
 .invite-container {
@@ -149,7 +168,44 @@ button.create-lobby-btn {
   padding: 12px;
 }
 
+@media only screen and (min-width: 500px) {
+  :root {
+    --board-size: 350px;
+  }
+
+  .board {
+    height: var(--board-size);
+    width: var(--board-size);
+  }
+
+  .board-square {
+    margin-right: -5px;
+    margin-top: -5px;
+  
+    border: 5px solid var(--board-square-border-color);
+  
+    font-size: 6rem;
+  }
+
+  .invite-container {
+    bottom: 80px;
+  }
+
+  form input,
+  form button.create-lobby-btn {
+    width: 300px;
+  }
+
+  button {
+    font-size: 2.4rem;
+  }
+}
+
 @media only screen and (min-width: 768px) {
+  :root {
+    --board-size: 500px;
+  }
+
   h1 {
     font-size: 4rem;
   }
@@ -165,12 +221,23 @@ button.create-lobby-btn {
   p,
   button {
     font-size: 2.6rem;
-    padding: 12px;
   }
 
-  form input,
-  form button.create-lobby-btn {
-    width: 300px;
-    font-size: 2.6rem;
+  .board {
+    height: var(--board-size);
+    width: var(--board-size);
+  }
+
+  .board-square {
+    margin-right: -5px;
+    margin-top: -5px;
+  
+    border: 5px solid var(--board-square-border-color);
+  
+    font-size: 8rem;
+  }
+
+  .invite-container {
+    bottom: 35px;
   }
 }
