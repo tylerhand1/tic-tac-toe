@@ -67,7 +67,9 @@ const Game = () => {
         setIsTie={setIsTie}
       />
       {inviteFriend &&
+      <div className='invite-container'>
         <InviteFriend inviteCode={inviteCode} setInviteCode={setInviteCode} />
+      </div>
       }
     </>
   );

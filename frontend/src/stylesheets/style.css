@@ -41,6 +41,10 @@ h2 {
   font-size: 2.8rem;
 }
 
+h3 {
+  font-size: 2.0rem;
+}
+
 p {
   font-size: 1.6rem;
 }
@@ -61,7 +65,7 @@ button[type=submit] {
 }
 
 main {
-  height: calc(100vh - var(--header-height) - 24px - 36px);
+  height: calc(100vh - var(--header-height) - 24px - 100px);
   width: 350px;
   margin: 0 auto;
   text-align: center;
@@ -95,12 +99,13 @@ form p {
 form input,
 form button.create-lobby-btn {
   width: 180px;
+  padding: 12px 0;
 }
 
 button {
   background-color: #74b9ff;
   font-size: 1.4rem;
-  padding: 24px;
+  padding: 12px 0;
 }
 
 button.create-lobby-btn {
@@ -108,6 +113,10 @@ button.create-lobby-btn {
 }
 
 /* Game */
+.player-info-container h2 {
+  margin-bottom: 6px;
+}
+
 .board {
   height: 250px;
   width: 250px;
@@ -127,4 +136,39 @@ button.create-lobby-btn {
   background-color: #ecf0f1;
 
   font-size: 2.4rem;
+}
+
+.invite-container {
+  position: absolute;
+  bottom: 50px;
+}
+
+.invite-code-btn {
+  padding: 12px;
+}
+
+@media only screen and (min-width: 768px) {
+  h1 {
+    font-size: 4rem;
+  }
+  
+  h2 {
+    font-size: 3.6rem;
+  }
+  
+  h3 {
+    font-size: 2.8rem;
+  }
+  
+  p,
+  button {
+    font-size: 2.6rem;
+    padding: 12px;
+  }
+
+  form input,
+  form button.create-lobby-btn {
+    width: 300px;
+    font-size: 2.6rem;
+  }
 }
