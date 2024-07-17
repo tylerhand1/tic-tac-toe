@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import Header from '@/components/ui/Header';
 import JoinCreateForm from '@/components/JoinCreateForm';
 import Game from '@/components/Game';
 

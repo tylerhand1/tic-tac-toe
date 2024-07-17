@@ -3,7 +3,7 @@ import TurnInfo from '@/components/TurnInfo';
 import InviteFriend from '@/components/InviteFriend';
 import { useEffect, useState } from 'react';
 import { socket } from '@/socket';
-import WinnerMessage from './WinnerMessage';
+import WinnerMessage from './ui/WinnerMessage';
 
 const Game = () => {
   const [player, setPlayer] = useState(0);
