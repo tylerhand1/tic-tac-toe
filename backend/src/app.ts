@@ -76,11 +76,11 @@ const findRoomByName = (room: string): room => {
   const roomNumber: number = Number.parseInt(room);
   const foundRoom = rooms.find(room => room.number === roomNumber)!;
   return foundRoom;
-}
+};
 
 const toggleRoomCurrPlayer = (room: room): void => {
   room.currPlayer = 1 - room.currPlayer;
-}
+};
 
 io.on('connection', socket => {
   socket.on('create-room', async (room: string) => {
@@ -121,13 +121,14 @@ io.on('connection', socket => {
         toggleRoomCurrPlayer(room);
       }
     }
-  })
+  });
 
   socket.on('disconnect', () => {
     const room = findRoomBySocket(socket.id);
     if (room !== undefined) {
       removeSocketFromRoom(room.number, socket.id);
       room.canPlay = false;
+      room.currPlayer = Player.X;
 
       const otherSocketName = room.sock_ids[0];
       const otherSocket = io.sockets.sockets.get(otherSocketName);
