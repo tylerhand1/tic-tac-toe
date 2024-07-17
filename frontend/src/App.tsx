@@ -30,9 +30,11 @@ const App = () => {
     <>
       <Header />
       <main>
-        {!isConnected
-          ? <JoinCreateForm />
-          : <Game />
+        {(!isConnected) &&
+          <JoinCreateForm />
+        }
+        {(isConnected) &&
+          <Game />
         }
       </main>
     </>

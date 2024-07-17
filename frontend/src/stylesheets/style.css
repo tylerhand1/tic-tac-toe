@@ -61,15 +61,25 @@ button[type=submit] {
 }
 
 main {
-  height: calc(100vh - var(--header-height) - 24px);
+  height: calc(100vh - var(--header-height) - 24px - 36px);
+  width: 350px;
+  margin: 0 auto;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 36px;
+  justify-content: space-evenly;
 }
 
 /* Lobby join/create form */
+.error {
+  color: red;
+}
+
+.no-error {
+  display: none
+}
+
 form {
   flex: 1;
   display: flex;
@@ -87,10 +97,14 @@ form button.create-lobby-btn {
   width: 180px;
 }
 
-button.create-lobby-btn {
+button {
   background-color: #74b9ff;
-  padding: 12px;
   font-size: 1.4rem;
+  padding: 24px;
+}
+
+button.create-lobby-btn {
+  padding: 12px;
 }
 
 /* Game */
