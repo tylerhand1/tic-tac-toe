@@ -23,7 +23,7 @@ export const TicTacToeBoard = ({
 
   useEffect(() => {
     const resetGame = (): void => {
-      setSquares(Array(9).fill(undefined));
+      setSquares(Array(9).fill(''));
     };
 
     const updateSquares = (index: number, player: number): void => {
@@ -97,7 +97,7 @@ export const TicTacToeBoard = ({
       socket.off('player-leave');
       socket.off('move-success');
     };
-  }, [squares, playerTurn, setPlayerTurn, gameOver, setGameOver]);
+  }, [squares, playerTurn, setPlayerTurn, gameOver, setGameOver, setIsTie]);
 
   const handleClick = (index: number) => {
     if (!gameOver) {
