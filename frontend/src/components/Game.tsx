@@ -1,5 +1,5 @@
 import { TicTacToeBoard } from '@/components/TicTacToeBoard';
-import TurnInfo from '@/components/TurnInfo';
+import TurnInfo from '@/components/ui/TurnInfo';
 import InviteFriend from '@/components/InviteFriend';
 import { useEffect, useState } from 'react';
 import { socket } from '@/socket';
