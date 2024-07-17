@@ -1,12 +1,12 @@
 import { render } from '@testing-library/react';
-import TurnInfo from '@/components/TurnInfo';
+import TurnInfo from '@/components/ui/TurnInfo';
 
 describe('TurnInfo tests', () => {
   let container: HTMLElement;
 
   it('should display an X if the player is 0', () => {
     container = render(
-      <TurnInfo player={0} />
+      <TurnInfo playerTurn={0} player={0} />
     ).container;
 
     const h2 = container.querySelector('h2');
@@ -15,7 +15,7 @@ describe('TurnInfo tests', () => {
 
   it('should display an O if the player is 1', () => {
     container = render(
-      <TurnInfo player={1} />
+      <TurnInfo playerTurn={0} player={1} />
     ).container;
 
     const h2 = container.querySelector('h2');
@@ -24,7 +24,7 @@ describe('TurnInfo tests', () => {
 
   it('should display neither X or O if the player is an invalid number', () => {
     container = render(
-      <TurnInfo player={-1} />
+      <TurnInfo playerTurn={0} player={-1} />
     ).container;
 
     const h2 = container.querySelector('h2');
