@@ -6,9 +6,11 @@ export interface SquareProps {
 export interface TicTacToeBoardProps {
   player: number,
   setPlayer: (value: number | ((prevVar: number) => number)) => void,
+  playerTurn: number,
 }
 
 export interface TurnInfoProps {
+  playerTurn: number,
   player: number,
 }
 

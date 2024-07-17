@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SquareProps, TicTacToeBoardProps } from '@/types';
 import { getPlayerName } from '@/utils/playerInfo';
+import { socket } from '@/socket';
 
 export const Square = ({ value, handleClick } : SquareProps) => {
   return (
@@ -10,22 +11,40 @@ export const Square = ({ value, handleClick } : SquareProps) => {
   );
 };
 
-export const TicTacToeBoard = ({ player, setPlayer } : TicTacToeBoardProps) => {
+export const TicTacToeBoard = ({
+  player,
+  setPlayer,
+  playerTurn,
+} : TicTacToeBoardProps) => {
   const [squares, setSquares] = useState<(string | undefined) []>(Array(9).fill(undefined));
 
   const handleClick = (index: number) => {
-    if (squares[index] === undefined) {
+    if (squares[index] === undefined && player === playerTurn) {
       const square = getPlayerName(player);
       const updatedSquares = [...squares];
       updatedSquares[index] = square;
       setSquares(updatedSquares);
-      togglePlayer();
+
+      socket.emit('make-move', index, player);
     }
   };
 
-  const togglePlayer = () => {
-    setPlayer(1 - player);
-  };
+  const resetBoard = (): void => {
+    setSquares(Array(9).fill(undefined));
+  }
+
+  const resetPlayer = (): void => {
+    setPlayer(0);
+  }
+
+  socket.on('player-leave', () => {
+    resetBoard();
+    resetPlayer();
+  })
+
+  socket.on('move-success', () => {
+    console.log('should toggle')
+  })
 
   return (
     <div className='board'>
