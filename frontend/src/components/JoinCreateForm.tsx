@@ -7,21 +7,21 @@ const JoinCreateForm = () => {
   const [lobby, setLobby] = useState<string>('');
   const [joinFail, setJoinFail] = useState<boolean>(false);
 
-  const joinLobby = (e: MouseEvent<HTMLElement>) => {
+  const joinLobby = (e: MouseEvent<HTMLElement>): void => {
     e.preventDefault();
     socket.connect();
     const roomNumber: number = Number.parseInt(lobby);
-    socket.emit('join-room', roomNumber)
+    socket.emit('join-room', roomNumber);
     setLobby('');
   };
 
-  const createLobby = async (e: MouseEvent<HTMLElement>) => {
+  const createLobby = async (e: MouseEvent<HTMLElement>): Promise<void> => {
     e.preventDefault();
     socket.connect();
-    const returnedData = await createRoom();
+    const returnedData: { room: number } = await createRoom();
     const roomNumber: number = returnedData.room;
     if (roomNumber !== -1) {
-      socket.emit('create-room', roomNumber)
+      socket.emit('create-room', roomNumber);
     }
   };
 
@@ -52,8 +52,8 @@ const JoinCreateForm = () => {
         joinLobby(e);
       }}/>
       <p>or</p>
-      <button className='create-lobby-btn' onClick={e => {
-        createLobby(e);
+      <button className='create-lobby-btn' onClick={(e) => {
+        void createLobby(e);
       }}>
         Create a lobby
       </button>

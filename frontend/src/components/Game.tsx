@@ -7,18 +7,29 @@ import { socket } from '@/socket';
 const Game = () => {
   const [player, setPlayer] = useState(0);
   const [inviteFriend, setInviteFriend] = useState(true);
+  const [inviteCode, setInviteCode] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     function onPlayerJoin() {
       setInviteFriend(false);
     }
 
+    function onPlayerLeave() {
+      setInviteFriend(true);
+    }
+
     socket.on('join-success', onPlayerJoin);
+    socket.on('player-leave', onPlayerLeave);
 
     return () => {
       socket.off('join-success', onPlayerJoin);
+      socket.off('player-leave', onPlayerLeave);
     };
   }, []);
+
+  socket.on('player-leave', (roomNumber: number) => {
+    setInviteCode(roomNumber);
+  });
 
   return (
     <>
@@ -30,7 +41,7 @@ const Game = () => {
         setPlayer={setPlayer}
       />
       {inviteFriend &&
-        <InviteFriend />
+        <InviteFriend inviteCode={inviteCode} setInviteCode={setInviteCode} />
       }
     </>
   );
