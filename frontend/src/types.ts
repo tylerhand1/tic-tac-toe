@@ -5,10 +5,15 @@ export interface SquareProps {
 
 export interface TicTacToeBoardProps {
   player: number,
-  setPlayer: (value: number | ((prevVar: number) => number)) => void,
+  playerTurn: number,
+  setPlayerTurn: (value: number | ((prevVar: number) => number)) => void,
+  gameOver: boolean,
+  setGameOver: (value: boolean | ((prevVar: boolean) => boolean)) => void,
+  setIsTie: (value: boolean | ((prevVar: boolean) => boolean)) => void,
 }
 
 export interface TurnInfoProps {
+  playerTurn: number,
   player: number,
 }
 
