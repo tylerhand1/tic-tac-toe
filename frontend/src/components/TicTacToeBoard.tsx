@@ -20,14 +20,16 @@ export const TicTacToeBoard = ({
 
   const handleClick = (index: number) => {
     if (squares[index] === undefined && player === playerTurn) {
-      const square = getPlayerName(player);
-      const updatedSquares = [...squares];
-      updatedSquares[index] = square;
-      setSquares(updatedSquares);
-
       socket.emit('make-move', index, player);
     }
   };
+
+  const updateSquares = (index: number, player: number): void => {
+    const square = getPlayerName(player);
+    const updatedSquares = [...squares];
+    updatedSquares[index] = square;
+    setSquares(updatedSquares);
+  }
 
   const resetBoard = (): void => {
     setSquares(Array(9).fill(undefined));
@@ -42,8 +44,8 @@ export const TicTacToeBoard = ({
     resetPlayer();
   })
 
-  socket.on('move-success', () => {
-    console.log('should toggle')
+  socket.on('move-success', (index, player) => {
+    updateSquares(index, player);
   })
 
   return (

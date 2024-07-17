@@ -108,18 +108,17 @@ io.on('connection', socket => {
     socket.emit('join-fail');
   });
 
-  socket.on('make-move', (_idx, player) => {
+  socket.on('make-move', (index, player) => {
     const room: room = findRoomBySocket(socket.id);
     if (room !== undefined && room.canPlay) {
       if (player === room.currPlayer) {
         room.sock_ids.forEach(sock_id => {
           const socket = io.sockets.sockets.get(sock_id);
           if (socket !== undefined) {
-            socket.emit('move-success')
+            socket.emit('move-success', index, player);
           }
         });
         toggleRoomCurrPlayer(room);
-        console.log('here', room)
       }
     }
   })
