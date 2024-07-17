@@ -9,6 +9,7 @@ export interface TicTacToeBoardProps {
   setPlayerTurn: (value: number | ((prevVar: number) => number)) => void,
   gameOver: boolean,
   setGameOver: (value: boolean | ((prevVar: boolean) => boolean)) => void,
+  setIsTie: (value: boolean | ((prevVar: boolean) => boolean)) => void,
 }
 
 export interface TurnInfoProps {

@@ -16,7 +16,8 @@ export const TicTacToeBoard = ({
   playerTurn,
   setPlayerTurn,
   gameOver,
-  setGameOver
+  setGameOver,
+  setIsTie
 } : TicTacToeBoardProps) => {
   const [squares, setSquares] = useState<(string) []>(Array(9).fill(''));
 
@@ -72,7 +73,12 @@ export const TicTacToeBoard = ({
       if (updatedGameOver) {
         const winner = playerTurn;
         setPlayerTurn(winner);
-        console.log(getPlayerName(winner));
+      } else {
+        const foundEmpty = updatedSquares.filter(square => square.length === 0);
+        if (foundEmpty.length === 0) {
+          updatedGameOver = true;
+          setIsTie(true);
+        }
       }
       setGameOver(updatedGameOver);
     };

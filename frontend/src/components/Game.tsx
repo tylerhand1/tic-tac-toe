@@ -9,6 +9,7 @@ const Game = () => {
   const [player, setPlayer] = useState(0);
   const [playerTurn, setPlayerTurn] = useState(player);
   const [gameOver, setGameOver] = useState(false);
+  const [isTie, setIsTie] = useState(false);
   const [inviteFriend, setInviteFriend] = useState(true);
   const [inviteCode, setInviteCode] = useState<number | undefined>(undefined);
 
@@ -52,7 +53,8 @@ const Game = () => {
           player={player}
         />
         : <WinnerMessage
-          winner={1- playerTurn}
+          isTie={isTie}
+          winner={1 - playerTurn}
         />
       }
       <TicTacToeBoard
@@ -61,6 +63,7 @@ const Game = () => {
         setPlayerTurn={setPlayerTurn}
         gameOver={gameOver}
         setGameOver={setGameOver}
+        setIsTie={setIsTie}
       />
       {inviteFriend &&
         <InviteFriend inviteCode={inviteCode} setInviteCode={setInviteCode} />
