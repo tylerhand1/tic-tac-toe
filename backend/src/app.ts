@@ -4,6 +4,8 @@ import { createServer } from 'node:http';
 import cors from 'cors';
 import config from './utils/config';
 
+import { Player, room } from './types';
+
 const allowedOrigins = ['http://localhost:4000'];
 const options: cors.CorsOptions = {
   origin: allowedOrigins,
@@ -22,18 +24,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   }
 });
-
-enum Player {
-  X = 0,
-  O = 1
-}
-
-interface room {
-  number: number,
-  canPlay: boolean,
-  currPlayer: Player
-  sock_ids: string []
-}
 
 let rooms: room [] = [];
 
