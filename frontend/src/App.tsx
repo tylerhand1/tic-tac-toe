@@ -33,10 +33,10 @@ const App = () => {
       socket.off('disconnect', onDisconnect);
       
       socket.off('join-success');
-      
+
       socket.off('join-faill');
     };
-  }, []);
+  }, [joinFail]);
 
   return (
     <>
