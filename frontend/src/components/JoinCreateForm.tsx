@@ -1,25 +1,15 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useState } from 'react';
 import { socket } from '@/socket';
 import { createRoom } from '@/services/tictactoeRoom';
 import ErrorMessage from './ui/ErrorMessage';
 
-const JoinCreateForm = () => {
+interface JoinCreateFormProps {
+  setIsConnected: (value: boolean | ((prevVal: boolean) => boolean)) => void,
+  joinFail: boolean
+}
+
+const JoinCreateForm = ({ setIsConnected, joinFail }: JoinCreateFormProps) => {
   const [lobby, setLobby] = useState<string>('');
-  const [joinFail, setJoinFail] = useState<boolean>(false);
-
-  useEffect(() => {
-    socket.on('join-fail', () => {
-      socket.disconnect();
-      setJoinFail(true);
-      setTimeout(() => {
-        setJoinFail(false);
-      }, 2 * 1000);
-    });
-
-    return () => {
-      socket.off('join-fail');
-    };
-  }, [joinFail]);
 
   const joinLobby = (e: MouseEvent<HTMLElement>): void => {
     e.preventDefault();
@@ -32,6 +22,7 @@ const JoinCreateForm = () => {
   const createLobby = async (e: MouseEvent<HTMLElement>): Promise<void> => {
     e.preventDefault();
     socket.connect();
+    setIsConnected(true);
     const returnedData: { room: number } = await createRoom();
     const roomNumber: number = returnedData.room;
     if (roomNumber !== -1) {

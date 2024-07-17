@@ -24,6 +24,7 @@ const Game = () => {
 
     const setSecondPlayer = () => {
       setPlayer(1);
+      setInviteFriend(false);
     };
 
     socket.on('join-success', onPlayerJoin);
@@ -43,7 +44,7 @@ const Game = () => {
 
       socket.off('player-leave');
     };
-  }, [inviteCode, player, playerTurn, gameOver]);
+  }, [inviteFriend, inviteCode, player, playerTurn, gameOver]);
 
   return (
     <>

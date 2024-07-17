@@ -7,22 +7,34 @@ import { useEffect, useState } from 'react';
 
 const App = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [joinFail, setJoinFail] = useState(false);
 
   useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
+    const onDisconnect = () => {
       setIsConnected(false);
-    }
+    };
 
-    socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 
+    socket.on('join-success', () => {
+      setIsConnected(true);
+    });
+
+    socket.on('join-fail', () => {
+      onDisconnect();
+      socket.disconnect();
+      setJoinFail(true);
+      setTimeout(() => {
+        setJoinFail(false);
+      }, 3 * 1000);
+    });
+
     return () => {
-      socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
+      
+      socket.off('join-success');
+      
+      socket.off('join-faill');
     };
   }, []);
 
@@ -31,9 +43,12 @@ const App = () => {
       <Header />
       <main>
         {(!isConnected) &&
-          <JoinCreateForm />
+          <JoinCreateForm
+            setIsConnected={setIsConnected}
+            joinFail={joinFail}
+          />
         }
-        {(isConnected) &&
+        {(isConnected) && !joinFail &&
           <Game />
         }
       </main>
