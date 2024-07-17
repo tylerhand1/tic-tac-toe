@@ -4,7 +4,10 @@ import { createServer } from 'node:http';
 import cors from 'cors';
 import config from './utils/config';
 
-import { Player, room } from './types';
+import { Player, Room } from './types';
+import * as roomUtil from './utils/room';
+
+export let rooms: Room [] = [];
 
 const allowedOrigins = ['http://localhost:4000'];
 const options: cors.CorsOptions = {
@@ -25,58 +28,11 @@ const io = new Server(server, {
   }
 });
 
-let rooms: room [] = [];
-
-const generateRoomNumber = (): number => {
-  if (rooms.length < 90000) {
-    let roomNumber: number = -1;
-    let generatedUniqueNumber: boolean = false;
-    while (!generatedUniqueNumber) {
-      roomNumber = Math.floor(10000 + Math.random() * 90000);
-      const roomsWithSameNumber = rooms.filter(room => room.number === roomNumber);
-      if (roomsWithSameNumber.length === 0) {
-        generatedUniqueNumber = true;
-      }
-    }
-    return roomNumber;
-  }
-  return -1;
-};
-
-const addSocketToRoom = (room: string, socket_id: string): void => {
-  const roomNumber: number = Number.parseInt(room);
-  const foundRoom = rooms.find(room => room.number === roomNumber);
-  foundRoom?.sock_ids.push(socket_id);
-};
-
-const removeSocketFromRoom = (roomName: number, socket_id: string): void => {
-  const foundRoom = rooms.find(room => room.number === roomName);
-  const socketIdx: number | undefined = foundRoom?.sock_ids.indexOf(socket_id);
-  if (socketIdx !== undefined) {
-    foundRoom?.sock_ids.splice(socketIdx, 1);
-  }
-};
-
-const findRoomBySocket = (socket_id: string): room => {
-  const foundRoom = rooms.find(room => room.sock_ids.indexOf(socket_id) > -1)!;
-  return foundRoom;
-};
-
-const findRoomByName = (room: string): room => {
-  const roomNumber: number = Number.parseInt(room);
-  const foundRoom = rooms.find(room => room.number === roomNumber)!;
-  return foundRoom;
-};
-
-const toggleRoomCurrPlayer = (room: room): void => {
-  room.currPlayer = 1 - room.currPlayer;
-};
-
 io.on('connection', socket => {
   socket.on('create-room', async (room: string) => {
     await socket.join(room);
 
-    addSocketToRoom(room, socket.id);
+    roomUtil.addSocketToRoom(room, socket.id);
 
     socket.emit('create-success', room);
   });
@@ -85,12 +41,12 @@ io.on('connection', socket => {
     if (io.sockets.adapter.rooms.get(room)) {
       if (io.sockets.adapter.rooms.get(room)!.size < 2) {
         await socket.join(room);
-        addSocketToRoom(room, socket.id);
+        roomUtil.addSocketToRoom(room, socket.id);
         io.to(room).emit('join-success');
         socket.emit('set-second-player');
         
         // allow game to start
-        const roomToUpdate = findRoomByName(room);
+        const roomToUpdate = roomUtil.findRoomByName(room);
         roomToUpdate.canPlay = true;
         return;
       }
@@ -99,7 +55,7 @@ io.on('connection', socket => {
   });
 
   socket.on('make-move', (index, player) => {
-    const room: room = findRoomBySocket(socket.id);
+    const room: Room = roomUtil.findRoomBySocket(socket.id);
     if (room !== undefined && room.canPlay) {
       if (player === room.currPlayer) {
         room.sock_ids.forEach(sock_id => {
@@ -108,15 +64,15 @@ io.on('connection', socket => {
             socket.emit('move-success', index, player);
           }
         });
-        toggleRoomCurrPlayer(room);
+        roomUtil.toggleRoomCurrPlayer(room);
       }
     }
   });
 
   socket.on('disconnect', () => {
-    const foundRoom = findRoomBySocket(socket.id);
+    const foundRoom = roomUtil.findRoomBySocket(socket.id);
     if (foundRoom !== undefined) {
-      removeSocketFromRoom(foundRoom.number, socket.id);
+      roomUtil.removeSocketFromRoom(foundRoom.number, socket.id);
 
       if (foundRoom.sock_ids.length === 0) {
         // Remove the room from the rooms ds if no more sockets in sock_ids
@@ -141,13 +97,15 @@ app.get('/ping', (_req: Request, res: Response) => {
 });
 
 app.post('/api/create-room', (_req: Request, res: Response) => {
-  const roomNumber = generateRoomNumber();
+  const roomNumber = roomUtil.generateRoomNumber();
+
   const newRoom = {
     number: roomNumber,
     canPlay: false,
     currPlayer: Player.X,
     sock_ids: [],
   };
+
   rooms.push(newRoom);
 
   res.status(200).send({
