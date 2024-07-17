@@ -1,3 +1,8 @@
+export interface GameProps {
+  inviteCode: number,
+  setInviteCode: (inviteCode: number | ((prevVar: number) => number)) => void
+}
+
 export interface SquareProps {
   value?: string,
   handleClick?: () => void
@@ -22,8 +27,8 @@ export interface CreateRoomResponse {
 }
 
 export interface InviteFriendProps {
-  inviteCode?: number,
-  setInviteCode: (inviteCode?: number | ((prevVar?: number) => number)) => void
+  inviteCode: number,
+  setInviteCode: (value: number | ((prevVar: number) => number)) => void
 }
 
 export interface ErrorMessageProps {

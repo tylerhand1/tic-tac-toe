@@ -1,4 +1,4 @@
-import Header from '@/components/Header';
+import Header from '@/components/ui/Header';
 import JoinCreateForm from '@/components/JoinCreateForm';
 import Game from '@/components/Game';
 
@@ -7,34 +7,54 @@ import { useEffect, useState } from 'react';
 
 const App = () => {
   const [isConnected, setIsConnected] = useState(socket.connected);
+  const [joinFail, setJoinFail] = useState(false);
+  const [inviteCode, setInviteCode] = useState<number>(0);
 
   useEffect(() => {
-    function onConnect() {
-      setIsConnected(true);
-    }
-
-    function onDisconnect() {
+    const onDisconnect = () => {
       setIsConnected(false);
-    }
+    };
 
-    socket.on('connect', onConnect);
     socket.on('disconnect', onDisconnect);
 
+    socket.on('join-success', () => {
+      setIsConnected(true);
+    });
+
+    socket.on('join-fail', () => {
+      onDisconnect();
+      socket.disconnect();
+      setJoinFail(true);
+      setTimeout(() => {
+        setJoinFail(false);
+      }, 3 * 1000);
+    });
+
     return () => {
-      socket.off('connect', onConnect);
       socket.off('disconnect', onDisconnect);
+      
+      socket.off('join-success');
+
+      socket.off('join-faill');
     };
-  }, []);
+  }, [joinFail]);
 
   return (
     <>
       <Header />
       <main>
         {(!isConnected) &&
-          <JoinCreateForm />
+          <JoinCreateForm
+            setInviteCode={setInviteCode}
+            setIsConnected={setIsConnected}
+            joinFail={joinFail}
+          />
         }
-        {(isConnected) &&
-          <Game />
+        {(isConnected) && !joinFail &&
+          <Game
+            inviteCode={inviteCode}
+            setInviteCode={setInviteCode}
+          />
         }
       </main>
     </>
