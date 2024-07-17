@@ -3,58 +3,64 @@ import TurnInfo from '@/components/TurnInfo';
 import InviteFriend from '@/components/InviteFriend';
 import { useEffect, useState } from 'react';
 import { socket } from '@/socket';
+import WinnerMessage from './WinnerMessage';
 
 const Game = () => {
   const [player, setPlayer] = useState(0);
   const [playerTurn, setPlayerTurn] = useState(player);
+  const [gameOver, setGameOver] = useState(false);
   const [inviteFriend, setInviteFriend] = useState(true);
   const [inviteCode, setInviteCode] = useState<number | undefined>(undefined);
 
   useEffect(() => {
-    function onPlayerJoin() {
+    const onPlayerJoin = () => {
       setInviteFriend(false);
-    }
+    };
 
-    function onPlayerLeave() {
+    const onPlayerLeave = () => {
       setInviteFriend(true);
-    }
+    };
 
-    function setSecondPlayer() {
+    const setSecondPlayer = () => {
       setPlayer(1);
-    }
+    };
 
     socket.on('join-success', onPlayerJoin);
     socket.on('set-second-player', setSecondPlayer);
-    socket.on('player-leave', onPlayerLeave);
+
+    socket.on('player-leave', (roomNumber: number) => {
+      onPlayerLeave();
+      setInviteCode(roomNumber);
+      setPlayer(0);
+      setPlayerTurn(0);
+      setGameOver(false);
+    });
 
     return () => {
       socket.off('join-success', onPlayerJoin);
       socket.off('set-second-player', setSecondPlayer);
-      socket.off('player-leave', onPlayerLeave);
+
+      socket.off('player-leave');
     };
-  }, []);
-
-  socket.on('move-success', () => {
-    const newPlayerTurn = 1 - playerTurn;
-    setPlayerTurn(newPlayerTurn);
-  })
-
-  socket.on('player-leave', (roomNumber: number) => {
-    setInviteCode(roomNumber);
-    setPlayer(0);
-    setPlayerTurn(0);
-  });
+  }, [inviteCode, player, playerTurn, gameOver]);
 
   return (
     <>
-      <TurnInfo
-        playerTurn={playerTurn}
-        player={player}
-      />
+      {!gameOver
+        ? <TurnInfo
+          playerTurn={playerTurn}
+          player={player}
+        />
+        : <WinnerMessage
+          winner={1- playerTurn}
+        />
+      }
       <TicTacToeBoard
         player={player}
-        setPlayer={setPlayer}
         playerTurn={playerTurn}
+        setPlayerTurn={setPlayerTurn}
+        gameOver={gameOver}
+        setGameOver={setGameOver}
       />
       {inviteFriend &&
         <InviteFriend inviteCode={inviteCode} setInviteCode={setInviteCode} />
