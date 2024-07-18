@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 
-const URL = 'http://52.91.164.162:3000';
+const URL = 'https://tictactoe.tylerhand.dev/';
 
 export const socket: Socket = io(URL, {
   autoConnect: false,
