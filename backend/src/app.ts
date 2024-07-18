@@ -17,6 +17,7 @@ const options: cors.CorsOptions = {
 
 const app: Express = express();
 app.use(cors(options));
+app.use(express.static('dist'));
 app.use(express.json());
 
 const server = createServer(app);

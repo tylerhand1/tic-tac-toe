@@ -2,14 +2,13 @@ version: '3.8'
 
 services:
   backend:
-    build: ./backend/
+    build: ./
     ports:
       - "3000:3000"
     volumes:
       - type: bind
         source: ./backend/src
         target: /app/src
-    command: npm run dev
     healthcheck:
       test: curl -s http://localhost:3000
       interval: 5s
