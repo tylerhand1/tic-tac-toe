@@ -87,6 +87,10 @@ export const TicTacToeBoard = ({
   }, [squares, isDisabled, checkWin, gameOver, setGameOver]);
 
   useEffect(() => {
+    setIsDisabled(gameOver);
+  }, [gameOver]);
+
+  useEffect(() => {
     const resetGame = (): void => {
       setSquares(Array(9).fill(''));
     };
