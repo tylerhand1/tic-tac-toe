@@ -5,7 +5,8 @@ export interface GameProps {
 
 export interface SquareProps {
   value?: string,
-  handleClick?: () => void
+  handleClick?: () => void,
+  isDisabled: boolean,
 }
 
 export interface TicTacToeBoardProps {
