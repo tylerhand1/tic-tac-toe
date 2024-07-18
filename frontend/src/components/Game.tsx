@@ -8,7 +8,7 @@ import WinnerMessage from './ui/WinnerMessage';
 import { GameProps } from '@/types';
 import StartNewGame from './ui/StartNewGame';
 
-const Game = ({inviteCode, setInviteCode}: GameProps) => {
+const Game = ({ inviteCode, setInviteCode }: GameProps) => {
   const [player, setPlayer] = useState(0);
   const [playerTurn, setPlayerTurn] = useState(player);
   const [gameOver, setGameOver] = useState(false);
@@ -46,7 +46,7 @@ const Game = ({inviteCode, setInviteCode}: GameProps) => {
 
       socket.off('player-leave');
     };
-  }, [inviteFriend, inviteCode, player, playerTurn, gameOver]);
+  }, [inviteFriend, inviteCode, setInviteCode, player, playerTurn, gameOver]);
 
   return (
     <>

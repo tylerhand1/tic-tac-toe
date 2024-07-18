@@ -9,7 +9,7 @@ const StartNewGame = () => {
         <button
           className='new-game-btn'
           onClick={() => {
-            void handleClick();
+            handleClick();
           }}
         >
           Find or create new game

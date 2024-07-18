@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { SquareProps, TicTacToeBoardProps } from '@/types';
 import { getPlayerName } from '@/utils/playerInfo';
 import { socket } from '@/socket';
@@ -21,6 +21,64 @@ export const TicTacToeBoard = ({
 } : TicTacToeBoardProps) => {
   const [squares, setSquares] = useState<(string) []>(Array(9).fill(''));
 
+  const checkWin = useCallback((updatedSquares: string []): boolean => {
+    if (gameOver) {
+      return true;
+    }
+    let updatedGameOver = false;
+    // Check each row
+    for (let i = 0; i < 9; i += 3) {
+      if (updatedSquares[i] === '') {
+        continue;
+      }
+      if (updatedSquares[i] === updatedSquares[i + 1] && updatedSquares[i + 1] === updatedSquares[i + 2]) {
+        updatedGameOver = true;
+      }
+    }
+    // Check each column
+    for (let i = 0; i < 3; i++) {
+      if (updatedSquares[i] === '') {
+        continue;
+      }
+      if (updatedSquares[i] === updatedSquares[i + 3] && updatedSquares[i + 3] === updatedSquares[i + 6]) {
+        updatedGameOver = true;
+      }
+    }
+    // Check diagonals
+    if (updatedSquares[0] === '') {
+      return false;
+    }
+    if (updatedSquares[0] === updatedSquares[4] && updatedSquares[4] === updatedSquares[8]) {
+      updatedGameOver = true;
+    }
+    if (updatedSquares[2] === '') {
+      return false;
+    }
+    if (updatedSquares[2] === updatedSquares[4] && updatedSquares[4] === updatedSquares[6]) {
+      updatedGameOver = true;
+    }
+    if (updatedGameOver) {
+      const winner = playerTurn;
+      setPlayerTurn(winner);
+    } else {
+      const foundEmpty = updatedSquares.filter(square => square.length === 0);
+      if (foundEmpty.length === 0) {
+        updatedGameOver = true;
+        setIsTie(true);
+      }
+    }
+    setGameOver(updatedGameOver);
+    return updatedGameOver;
+  }, [gameOver, setGameOver, playerTurn, setPlayerTurn, setIsTie]);
+
+  const handleClick = (index: number) => {
+    if (!checkWin(squares)) {
+      if (squares[index] === '' && player === playerTurn) {
+        socket.emit('make-move', index, player);
+      }
+    }
+  };
+
   useEffect(() => {
     const resetGame = (): void => {
       setSquares(Array(9).fill(''));
@@ -32,55 +90,6 @@ export const TicTacToeBoard = ({
       updatedSquares[index] = square;
       setSquares(updatedSquares);
       checkWin(updatedSquares);
-    };
-
-    const checkWin = (updatedSquares: string []): void => {
-      if (gameOver) {
-        return;
-      }
-      let updatedGameOver = false;
-      // Check each row
-      for (let i = 0; i < 9; i += 3) {
-        if (updatedSquares[i] === '') {
-          continue;
-        }
-        if (updatedSquares[i] === updatedSquares[i + 1] && updatedSquares[i + 1] === updatedSquares[i + 2]) {
-          updatedGameOver = true;
-        }
-      }
-      // Check each column
-      for (let i = 0; i < 3; i++) {
-        if (updatedSquares[i] === '') {
-          continue;
-        }
-        if (updatedSquares[i] === updatedSquares[i + 3] && updatedSquares[i + 3] === updatedSquares[i + 6]) {
-          updatedGameOver = true;
-        }
-      }
-      // Check diagonals
-      if (updatedSquares[0] === '') {
-        return;
-      }
-      if (updatedSquares[0] === updatedSquares[4] && updatedSquares[4] === updatedSquares[8]) {
-        updatedGameOver = true;
-      }
-      if (updatedSquares[2] === '') {
-        return;
-      }
-      if (updatedSquares[2] === updatedSquares[4] && updatedSquares[4] === updatedSquares[6]) {
-        updatedGameOver = true;
-      }
-      if (updatedGameOver) {
-        const winner = playerTurn;
-        setPlayerTurn(winner);
-      } else {
-        const foundEmpty = updatedSquares.filter(square => square.length === 0);
-        if (foundEmpty.length === 0) {
-          updatedGameOver = true;
-          setIsTie(true);
-        }
-      }
-      setGameOver(updatedGameOver);
     };
 
     socket.on('player-leave', () => {
@@ -97,15 +106,7 @@ export const TicTacToeBoard = ({
       socket.off('player-leave');
       socket.off('move-success');
     };
-  }, [squares, playerTurn, setPlayerTurn, gameOver, setGameOver, setIsTie]);
-
-  const handleClick = (index: number) => {
-    if (!gameOver) {
-      if (squares[index] === '' && player === playerTurn) {
-        socket.emit('make-move', index, player);
-      }
-    }
-  };
+  }, [squares, playerTurn, setPlayerTurn, gameOver, setGameOver, checkWin, setIsTie]);
 
   return (
     <div className='board'>

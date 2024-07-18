@@ -2,14 +2,12 @@ import { socket } from '@/socket';
 import { InviteFriendProps } from '@/types';
 
 const InviteFriend = ({ inviteCode, setInviteCode }: InviteFriendProps) => {
-  socket.on('create-success', (inviteCode: number | undefined) => {
-    if (inviteCode !== undefined) {
-      setInviteCode(inviteCode);
-    }
+  socket.on('create-success', (inviteCode: number) => {
+    setInviteCode(inviteCode);
   });
 
   const handleClick = async (): Promise<void> => {
-    if (inviteCode !== undefined) {
+    if (inviteCode) {
       await navigator.clipboard.writeText(inviteCode.toString());
     }
   };
