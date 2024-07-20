@@ -11,17 +11,10 @@ const App = () => {
   const [inviteCode, setInviteCode] = useState<number>(0);
 
   useEffect(() => {
-    // const onDisconnect = () => {
-    //   setIsConnected(false);
-    // };
-
-    // socket.on('disconnect', onDisconnect);
-
     socket.on('join-success', () => {
       setIsConnected(true);
       setJoinFail(false);
     });
-
     socket.on('join-fail', () => {
       // onDisconnect();
       // socket.disconnect();
@@ -32,10 +25,7 @@ const App = () => {
     });
 
     return () => {
-      // socket.off('disconnect', onDisconnect);
-      
       socket.off('join-success');
-
       socket.off('join-faill');
     };
   }, [joinFail]);
