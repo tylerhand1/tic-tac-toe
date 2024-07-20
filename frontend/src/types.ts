@@ -1,6 +1,12 @@
 export interface GameProps {
+  player: number,
+  setPlayer: (value: number | ((prevVar: number) => number)) => void
+  playerTurn: number,
+  setPlayerTurn: (value: number | ((prevVar: number) => number)) => void
+  inviteFriend: boolean,
+  setInviteFriend: (value: boolean | ((prevVar: boolean) => boolean)) => void
   inviteCode: number,
-  setInviteCode: (inviteCode: number | ((prevVar: number) => number)) => void
+  setInviteCode: (value: number | ((prevVar: number) => number)) => void
 }
 
 export interface SquareProps {

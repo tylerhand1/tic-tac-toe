@@ -8,29 +8,19 @@ import WinnerMessage from './ui/WinnerMessage';
 import { GameProps } from '@/types';
 import StartNewGame from './ui/StartNewGame';
 
-const Game = ({ inviteCode, setInviteCode }: GameProps) => {
-  const [player, setPlayer] = useState(0);
-  const [playerTurn, setPlayerTurn] = useState(player);
+const Game = ({ player, setPlayer,
+  playerTurn, setPlayerTurn,
+  inviteFriend, setInviteFriend,
+  inviteCode, setInviteCode }:
+  GameProps) => {
+
   const [gameOver, setGameOver] = useState(false);
   const [isTie, setIsTie] = useState(false);
-  const [inviteFriend, setInviteFriend] = useState(true);
 
   useEffect(() => {
-    const onPlayerJoin = () => {
-      setInviteFriend(false);
-    };
-
     const onPlayerLeave = () => {
       setInviteFriend(true);
     };
-
-    const setSecondPlayer = () => {
-      setPlayer(1);
-      setInviteFriend(false);
-    };
-
-    socket.on('join-success', onPlayerJoin);
-    socket.on('set-second-player', setSecondPlayer);
 
     socket.on('player-leave', (roomNumber: number) => {
       onPlayerLeave();
@@ -38,16 +28,24 @@ const Game = ({ inviteCode, setInviteCode }: GameProps) => {
       setPlayer(0);
       setPlayerTurn(0);
       setGameOver(false);
+      setIsTie(false);
     });
 
     return () => {
-      socket.off('join-success', onPlayerJoin);
-      socket.off('set-second-player', setSecondPlayer);
-
       socket.off('player-leave');
     };
-  }, [inviteFriend, inviteCode, setInviteCode, player, playerTurn, gameOver]);
+  }, [inviteFriend, setInviteFriend, inviteCode, setInviteCode, player, setPlayer, playerTurn, setPlayerTurn, gameOver]);
 
+  useEffect(() => {
+    socket.on('set-second-player', () => {
+      setPlayer(1);
+      setInviteFriend(false);
+    });
+    return () => {
+      socket.off('set-second-player');
+    };
+  }, [player, setPlayer, inviteFriend, setInviteFriend]);
+  console.log(socket);
   return (
     <>
       {!gameOver
