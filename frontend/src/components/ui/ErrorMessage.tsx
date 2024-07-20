@@ -2,7 +2,9 @@ import { ErrorMessageProps } from '@/types';
 
 const ErrorMessage = ({ error, message }: ErrorMessageProps) => {
   return (
-    <p className={error ? 'error' : 'no-error'}>{message}</p>
+    <div className='error-container'>
+       <p className={error ? 'error' : 'no-error'}>{message}</p>
+    </div>
   );
 };
 

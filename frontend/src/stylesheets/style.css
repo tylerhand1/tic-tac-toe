@@ -28,15 +28,28 @@
   --button-bg-color: #2980b9;
 }
 
-html,
-body {
+html {
   height: 100%;
+}
+
+
+body,
+#root {
+  min-height: 100%;
 }
 
 body {
   font-size: 62.5%;
   background-color: var(--bg-color);
   color: var(--text-color);
+
+  display: flex;
+}
+
+#root {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
@@ -67,6 +80,10 @@ input {
   border: none;
 }
 
+button:active {
+  border: 1px solid #2967b9;
+}
+
 input {
   width: 150px;
   font-size: 2.2rem;
@@ -78,7 +95,7 @@ button[type=submit] {
 }
 
 main {
-  height: calc(100vh - var(--header-height) - 24px - 100px);
+  flex: 1;
   width: 350px;
   margin: 0 auto;
   text-align: center;
@@ -86,13 +103,16 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: space-evenly;
+  gap: 12px;
 }
 
 /* Lobby join/create form */
+.error-container {
+  height: 150px;
+}
+
 .error {
   color: red;
-  position: absolute;
-  top: 200px;
 }
 
 .no-error {
@@ -159,14 +179,16 @@ button.create-lobby-btn {
   font-size: 4rem;
 }
 
-.invite-container {
-  position: absolute;
-  bottom: 40px;
+.invite-code-container {
+  height: 200px;
+  display: flex;
+  align-items: center;
 }
 
 .invite-code-btn,
 .new-game-btn {
   padding: 12px;
+  border-radius: 24px;
 }
 
 @media only screen and (min-width: 500px) {
@@ -186,10 +208,6 @@ button.create-lobby-btn {
     border: 5px solid var(--board-square-border-color);
   
     font-size: 6rem;
-  }
-
-  .invite-container {
-    bottom: 80px;
   }
 
   form input,
@@ -236,9 +254,5 @@ button.create-lobby-btn {
     border: 5px solid var(--board-square-border-color);
   
     font-size: 8rem;
-  }
-
-  .invite-container {
-    bottom: 35px;
   }
 }
