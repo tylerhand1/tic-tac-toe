@@ -3,4 +3,4 @@ WORKDIR /app
 COPY ./backend .
 RUN npm ci
 RUN npm run tsc
-CMD ["npm", "start"]
+CMD ["npm", "run", "dev"]
