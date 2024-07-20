@@ -16,8 +16,6 @@ const App = () => {
       setJoinFail(false);
     });
     socket.on('join-fail', () => {
-      // onDisconnect();
-      // socket.disconnect();
       setJoinFail(true);
       setTimeout(() => {
         setJoinFail(false);
