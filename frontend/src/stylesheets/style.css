@@ -26,6 +26,7 @@
   --board-square-color: #e74c3c;
 
   --button-bg-color: #2980b9;
+  --button-bg-color-click: #0984e3;
 }
 
 html {
@@ -80,8 +81,9 @@ input {
   border: none;
 }
 
-button:active {
-  border: 1px solid #2967b9;
+.invite-code-btn:active,
+.create-lobby-btn:active {
+  background-color: var(--button-bg-color-click);
 }
 
 input {
